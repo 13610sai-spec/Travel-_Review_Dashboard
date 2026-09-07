@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Travel Review</title>
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background: #f4f7fb;
+            color: #222;
+        }
+
+        header {
+            background: #087f8c;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin-bottom: 8px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+        }
+
+        .dashboard {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .box {
+            background: white;
+            padding: 20px;
+            flex: 1;
+            text-align: center;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px #ddd;
+        }
+
+        .box h2 {
+            color: #087f8c;
+            margin-bottom: 5px;
+        }
+
+        .search {
+            margin-bottom: 25px;
+        }
+
+        .search input {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 3px 12px #ddd;
+            transition: 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .info {
+            padding: 18px;
+        }
+
+        .info h2 {
+            margin-bottom: 8px;
+        }
+
+        .country {
+            color: #777;
+            margin-bottom: 10px;
+        }
+
+        .stars {
+            color: #ffb400;
+            margin-bottom: 10px;
+        }
+
+        .review {
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .btn {
+            margin-top: 15px;
+            padding: 10px 15px;
+            border: none;
+            background: #087f8c;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: #05636d;
+        }
+
+        @media(max-width: 700px) {
+
+            .dashboard {
+                flex-direction: column;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+    </style>
+</head>
+
+
+<body>
+
+    <header>
+
+        <h1>✈️ Travel Review</h1>
+
+        <p>
+            Discover beautiful places around the world
+        </p>
+
+    </header>
+
+
+    <div class="container">
+
+        <!-- Dashboard -->
+
+        <div class="dashboard">
+
+            <div class="box">
+                <h2 id="total">6</h2>
+                <p>Destinations</p>
+            </div>
+
+            <div class="box">
+                <h2>4.8 ⭐</h2>
+                <p>Average Rating</p>
+            </div>
+
+            <div class="box">
+                <h2>1,250</h2>
+                <p>Total Reviews</p>
+            </div>
+
+        </div>
+
+
+        <!-- Search -->
+
+        <div class="search">
+
+            <input
+                type="text"
+                id="search"
+                placeholder="🔍 Search country..."
+                onkeyup="searchCountry()"
+            >
+
+        </div>
+
+
+        <!-- Cards -->
+
+        <div class="cards" id="cards"></div>
+
+    </div>
+
+
+    <script>
+
+        const places = [
+
+            {
+                name: "Paris",
+                country: "France",
+                image: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=80",
+                rating: "4.9",
+                review: "Paris is famous for the Eiffel Tower, beautiful streets, museums and delicious food."
+            },
+
+            {
+                name: "Dubai",
+                country: "United Arab Emirates",
+                image: "https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=800&q=80",
+                rating: "4.8",
+                review: "Dubai is an amazing destination with modern buildings, luxury shopping and beautiful beaches."
+            },
+
+            {
+                name: "Tokyo",
+                country: "Japan",
+                image: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?auto=format&fit=crop&w=800&q=80",
+                rating: "4.8",
+                review: "Tokyo offers amazing technology, traditional culture, delicious food and exciting nightlife."
+            },
+
+            {
+                name: "Bali",
+                country: "Indonesia",
+                image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=800&q=80",
+                rating: "4.7",
+                review: "Bali is perfect for beaches, nature, temples and relaxing holidays."
+            },
+
+            {
+                name: "New York",
+                country: "USA",
+                image: "https://images.unsplash.com/photo-1485871981521-5b1fd3805eee?auto=format&fit=crop&w=800&q=80",
+                rating: "4.6",
+                review: "New York is a lively city with famous landmarks, restaurants, shopping and entertainment."
+            },
+
+            {
+                name: "Santorini",
+                country: "Greece",
+                image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?auto=format&fit=crop&w=800&q=80",
+                rating: "4.9",
+                review: "Santorini is famous for its white buildings, blue roofs, sunsets and beautiful sea views."
+            }
+
+        ];
+
+
+        // Display places
+
+        function displayPlaces(data) {
+
+            const cards =
+                document.getElementById("cards");
+
+            cards.innerHTML = "";
+
+
+            data.forEach(place => {
+
+                const card =
+                    document.createElement("div");
+
+                card.className = "card";
+
+
+                card.innerHTML = `
+
+                    <img
+                        src="${place.image}"
+                        alt="${place.name}"
+                    >
+
+                    <div class="info">
+
+                        <h2>
+                            ${place.name}
+                        </h2>
+
+                        <p class="country">
+                            🌍 ${place.country}
+                        </p>
+
+                        <div class="stars">
+                            ⭐⭐⭐⭐⭐
+                            ${place.rating}
+                        </div>
+
+                        <p class="review">
+                            ${place.review}
+                        </p>
+
+                        <button
+                            class="btn"
+                            onclick="showReview('${place.name}')">
+
+                            Read Review
+
+                        </button>
+
+                    </div>
+
+                `;
+
+
+                cards.appendChild(card);
+
+            });
+
+        }
+
+
+        // Search
+
+        function searchCountry() {
+
+            const text =
+                document
+                .getElementById("search")
+                .value
+                .toLowerCase();
+
+
+            const result =
+                places.filter(place =>
+
+                    place.name
+                    .toLowerCase()
+                    .includes(text)
+
+                    ||
+
+                    place.country
+                    .toLowerCase()
+                    .includes(text)
+
+                );
+
+
+            displayPlaces(result);
+
+        }
+
+
+        // Review button
+
+        function showReview(name) {
+
+            alert(
+                "⭐ Reviews for " +
+                name +
+                "\n\n" +
+                "★★★★★ Excellent destination!\n\n" +
+                "Travelers loved this place."
+            );
+
+        }
+
+
+        // Start
+
+        displayPlaces(places);
+
+    </script>
+
+</body>
+</html>
